@@ -1,0 +1,38 @@
+# Binaries (Hasil kompilasi Go)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Code coverage files
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Dependency directory
+vendor/
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Environment configuration files
+.env
+
+# Antigravity IDE & Agentic Files
+.agents/skills/
+.antigravity/
+.agent_history/
+*.agent.log
+.antigravity_artifacts/
+
+# General IDE (jika Anda menggunakan ekstensi Antigravity di VS Code/JetBrains)
+.vscode/
+.idea/
+*.swp
+.DS_Store
