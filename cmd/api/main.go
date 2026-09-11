@@ -3,7 +3,6 @@ package main
 import (
 	"go-ecommerce/internal/config"
 	"go-ecommerce/internal/database"
-	"go-ecommerce/internal/models"
 	"log"
 
 	"github.com/gofiber/fiber/v3"
@@ -12,12 +11,10 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 
-	db, err := database.Connect()
+	_, err := database.Connect()
 	if err != nil {
 		log.Fatal("Failed to connect database:", err)
 	}
-
-	db.AutoMigrate(&models.User{})
 
 	app := fiber.New()
 
