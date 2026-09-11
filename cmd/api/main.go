@@ -20,6 +20,8 @@ func main() {
 
 	log.Println("Database connected")
 
+	log.Printf("Server running on %s", cfg.AppPort)
+
 	app.Get("/health", func(c fiber.Ctx) error {
 		return c.SendString("OK")
 	})
