@@ -1,16 +1,29 @@
-# Load .env if exist
 ifneq (,$(wildcard .env))
     include .env
     export
 endif
 
-# Default variables can be override via environment
-DB_URL ?= $(env_DB_URL)
 MIGRATIONS_PATH ?= ./migrations
-SERVER_MAIN ?= main.go
+SERVER_PATH ?= ./cmd/api
+BIN_PATH ?= ./bin/api
 
-.PHONY: migrate-up migrate-down migrate-reset migrate-version migrate-create run
+.PHONY: run build test tidy \
+        migrate-up migrate-down migrate-reset migrate-version migrate-create
 
+# Server
+run:
+	go run $(SERVER_PATH)
+
+build:
+	go build -o $(BIN_PATH) $(SERVER_PATH)
+
+test:
+	go test ./... -v
+
+tidy:
+	go mod tidy
+
+# Migrations
 migrate-up:
 	migrate -path $(MIGRATIONS_PATH) -database "$(DB_URL)" up
 
@@ -27,6 +40,3 @@ migrate-version:
 migrate-create:
 	@powershell -Command "if ('$(NAME)' -eq '') { Write-Host 'Error: NAME is required. Usage: make migrate-create NAME=migrations_name' -ForegroundColor Red; exit 1 }"
 	migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $(NAME)
-
-run:
-	go run $(SERVER_MAIN)
