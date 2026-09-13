@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -37,6 +38,13 @@ func LoadConfig() *Config {
 	}
 
 	return cfg
+}
+
+func (c *Config) ServerAddress() string {
+	if !strings.Contains(c.AppPort, ":") {
+		return ":" + c.AppPort
+	}
+	return c.AppPort
 }
 
 func getEnvValue(envMap map[string]string, key string, defaultValue string) string {

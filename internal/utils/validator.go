@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -10,46 +9,35 @@ import (
 var validate = validator.New()
 
 func ValidateStruct(s interface{}) error {
-	err := validate.Struct(s)
-	if err != nil {
-		var ve validator.ValidationErrors
-		if errors.As(err, &ve) {
-			for _, e := range ve {
-				return fmt.Errorf("field %s failed validation %s", e.Field(), e.Tag())
-			}
-		}
-		var ivd *validator.InvalidValidationError
-		if errors.As(err, &ivd) {
-			return fmt.Errorf("invalid validation: %s", ivd)
-		}
-		return err
-	}
-	return nil
+	return validate.Struct(s)
 }
 
 func FormatValidationErrors(err error) map[string]string {
-	errType := err.(validator.ValidationErrors)
-
-	for _, fieldError := range errType {
-		switch fieldError.Tag() {
-		case "required":
-			return map[string]string{
-				fieldError.Field(): fieldError.Field() + " is required",
-			}
-		case "email":
-			return map[string]string{
-				fieldError.Field(): fieldError.Field() + " must be a valid email",
-			}
-		case "min":
-			return map[string]string{
-				fieldError.Field(): fieldError.Field() + " must be at least " + fieldError.Param() + " characters",
-			}
-		case "max":
-			return map[string]string{
-				fieldError.Field(): fieldError.Field() + " must be at most " + fieldError.Param() + " characters",
-			}
+	var errs validator.ValidationErrors
+	if !errors.As(err, &errs) {
+		return map[string]string{
+			"_error": "unknown validation error",
 		}
 	}
 
-	return nil
+	result := make(map[string]string)
+	for _, fieldError := range errs {
+		result[fieldError.Field()] = messageForTag(fieldError)
+	}
+	return result
+}
+
+func messageForTag(e validator.FieldError) string {
+	switch e.Tag() {
+	case "required":
+		return e.Field() + " is required"
+	case "email":
+		return e.Field() + " must be a valid email"
+	case "min":
+		return e.Field() + " must be at least " + e.Param() + " characters"
+	case "max":
+		return e.Field() + " must be at most " + e.Param() + " characters"
+	default:
+		return e.Field() + " is invalid"
+	}
 }
