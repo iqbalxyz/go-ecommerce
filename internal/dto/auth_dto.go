@@ -20,6 +20,16 @@ type UserResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type LoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+type LoginResponse struct {
+	Token string       `json:"token"`
+	User  UserResponse `json:"user"`
+}
+
 func ToUserResponse(u *models.User) UserResponse {
 	return UserResponse{
 		ID:        u.ID,
@@ -28,5 +38,12 @@ func ToUserResponse(u *models.User) UserResponse {
 		Role:      u.Role,
 		IsActive:  u.IsActive,
 		CreatedAt: u.CreatedAt,
+	}
+}
+
+func ToLoginResponse(user *models.User, token string) LoginResponse {
+	return LoginResponse{
+		Token: token,
+		User:  ToUserResponse(user),
 	}
 }

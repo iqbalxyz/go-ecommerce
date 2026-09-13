@@ -18,6 +18,7 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBPort     string
+	JWTSecret  string
 }
 
 func LoadConfig() *Config {
@@ -35,6 +36,7 @@ func LoadConfig() *Config {
 		DBPassword: getEnvValue(envMap, "DB_PASSWORD", ""),
 		DBName:     getEnvValue(envMap, "DB_NAME", "ecommerce"),
 		DBPort:     getEnvValue(envMap, "DB_PORT", "3306"),
+		JWTSecret:  getEnvValue(envMap, "JWT_SECRET", ""),
 	}
 
 	return cfg

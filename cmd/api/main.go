@@ -8,6 +8,7 @@ import (
 	"go-ecommerce/internal/router"
 	"go-ecommerce/internal/service"
 	"log"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,6 +17,10 @@ func main() {
 	// 1. Load Config
 	cfg := config.LoadConfig()
 	addr := cfg.ServerAddress()
+
+	if cfg.JWTSecret == "" {
+		log.Fatal("JWT_SECRET is required")
+	}
 
 	// 2. Connect DB
 	db, err := database.Connect()
@@ -26,14 +31,14 @@ func main() {
 
 	// 3. Wire dependencies (Repository -> Service -> Handler)
 	userRepo := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepo)
+	userService := service.NewUserService(userRepo, cfg.JWTSecret, 24*time.Hour)
 	userHandler := handler.NewUserHandler(userService)
 
 	// 4. Initialize Fiber App
 	app := fiber.New()
 
 	// 5. Setup Routes
-	router.SetupRoutes(app, userHandler)
+	router.SetupRoutes(app, userHandler, cfg.JWTSecret)
 
 	// 6. Listen
 	log.Printf("Server running on port %s", cfg.AppPort)
