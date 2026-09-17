@@ -7,18 +7,31 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-func SetupRoutes(app *fiber.App, userHandler *handler.UserHandler, jwtSecret string) {
-	// create group /api/v1
+func SetupRoutes(
+	app *fiber.App,
+	userHandler *handler.UserHandler,
+	productHandler *handler.ProductHandler,
+	jwtSecret string) {
+
 	api := app.Group("/api/v1")
 
-	// auth group
+	// public routes
 	auth := api.Group("/auth")
-
-	// user auth routes
 	auth.Post("/register", userHandler.Register)
 	auth.Post("/login", userHandler.Login)
 
-	// users route group
-	users := api.Group("/users", middleware.Auth(jwtSecret))
-	users.Get("/me", userHandler.Me)
+	products := api.Group("/products")
+	products.Get("/", productHandler.List)
+	products.Get("/:id", productHandler.GetByID)
+
+	// auth required
+	authenticated := api.Group("", middleware.Auth(jwtSecret))
+	authenticated.Get("/me", userHandler.Me)
+
+	// admin only
+	admin := authenticated.Group("/products", middleware.RequireRole("admin"))
+	admin.Post("/", productHandler.Create)
+	admin.Put("/:id", productHandler.Update)
+	admin.Delete("/:id", productHandler.Delete)
+
 }
