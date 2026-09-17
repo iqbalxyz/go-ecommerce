@@ -17,4 +17,8 @@ var (
 	ErrProductNotFound    = errors.New("product not found")
 	ErrForbidden          = errors.New("forbidden")
 	ErrProductExists      = errors.New("product already exists")
+	ErrCartNotFound       = errors.New("cart not found")
+	ErrCartItemNotFound   = errors.New("item not found")
+	ErrProductInactive    = errors.New("product is inactive")
+	ErrInsufficientStock  = errors.New("insufficient stock")
 )

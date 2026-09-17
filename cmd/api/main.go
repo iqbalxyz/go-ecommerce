@@ -38,11 +38,21 @@ func main() {
 	productService := service.NewProductService(productRepo)
 	productHandler := handler.NewProductHandler(productService)
 
+	cartRepo := repository.NewCartRepository(db)
+	cartService := service.NewCartService(cartRepo, productRepo)
+	cartHandler := handler.NewCartHandler(cartService)
+
 	// 4. Initialize Fiber App
 	app := fiber.New()
 
 	// 5. Setup Routes
-	router.SetupRoutes(app, userHandler, productHandler, cfg.JWTSecret)
+	router.SetupRoutes(
+		app,
+		userHandler,
+		productHandler,
+		cartHandler,
+		cfg.JWTSecret,
+	)
 
 	// 6. Listen
 	log.Printf("Server running on port %s", cfg.AppPort)

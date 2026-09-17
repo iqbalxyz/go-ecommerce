@@ -11,6 +11,7 @@ func SetupRoutes(
 	app *fiber.App,
 	userHandler *handler.UserHandler,
 	productHandler *handler.ProductHandler,
+	cartHandler *handler.CartHandler,
 	jwtSecret string) {
 
 	api := app.Group("/api/v1")
@@ -28,10 +29,16 @@ func SetupRoutes(
 	authenticated := api.Group("", middleware.Auth(jwtSecret))
 	authenticated.Get("/me", userHandler.Me)
 
-	// admin only
+	// admin only products
 	admin := authenticated.Group("/products", middleware.RequireRole("admin"))
 	admin.Post("/", productHandler.Create)
 	admin.Put("/:id", productHandler.Update)
 	admin.Delete("/:id", productHandler.Delete)
 
+	// carts
+	carts := authenticated.Group("/cart")
+	carts.Get("/", cartHandler.GetCart)
+	carts.Post("/items", cartHandler.AddItem)
+	carts.Put("/items/:id", cartHandler.UpdateItem)
+	carts.Delete("/items/:id", cartHandler.RemoveItem)
 }
