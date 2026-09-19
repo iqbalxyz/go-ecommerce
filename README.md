@@ -274,7 +274,7 @@ All responses adhere to a consistent JSON structure:
 ![Request/Response](assets/image.png)
 
 ### 2. Server Log
-![alt text](image-1.png)
+![alt text](assets/image-1.png)
 
 ---
 
