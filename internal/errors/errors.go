@@ -21,4 +21,6 @@ var (
 	ErrCartItemNotFound   = errors.New("item not found")
 	ErrProductInactive    = errors.New("product is inactive")
 	ErrInsufficientStock  = errors.New("insufficient stock")
+	ErrOrderNotFound      = errors.New("order not found")
+	ErrEmptyCart          = errors.New("cart is empty")
 )

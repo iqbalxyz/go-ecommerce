@@ -12,6 +12,7 @@ func SetupRoutes(
 	userHandler *handler.UserHandler,
 	productHandler *handler.ProductHandler,
 	cartHandler *handler.CartHandler,
+	orderHandler *handler.OrderHandler,
 	jwtSecret string) {
 
 	api := app.Group("/api/v1")
@@ -41,4 +42,10 @@ func SetupRoutes(
 	carts.Post("/items", cartHandler.AddItem)
 	carts.Put("/items/:id", cartHandler.UpdateItem)
 	carts.Delete("/items/:id", cartHandler.RemoveItem)
+
+	// orders
+	orders := authenticated.Group("/orders")
+	orders.Post("/", orderHandler.Checkout)
+	orders.Get("/", orderHandler.List)
+	orders.Get("/:id", orderHandler.GetByID)
 }

@@ -42,6 +42,10 @@ func main() {
 	cartService := service.NewCartService(cartRepo, productRepo)
 	cartHandler := handler.NewCartHandler(cartService)
 
+	orderRepo := repository.NewOrderRepository(db)
+	orderService := service.NewOrderService(orderRepo, cartRepo)
+	orderHandler := handler.NewOrderHandler(orderService)
+
 	// 4. Initialize Fiber App
 	app := fiber.New()
 
@@ -51,6 +55,7 @@ func main() {
 		userHandler,
 		productHandler,
 		cartHandler,
+		orderHandler,
 		cfg.JWTSecret,
 	)
 
