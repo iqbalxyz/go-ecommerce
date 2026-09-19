@@ -21,7 +21,7 @@ type Config struct {
 	JWTSecret  string
 }
 
-func LoadConfig() *Config {
+func LoadConfig() (*Config, error) {
 	envMap, err := godotenv.Read(".env")
 	if err != nil {
 		log.Println("Info: file .env not found, reading from system environment")
@@ -39,7 +39,27 @@ func LoadConfig() *Config {
 		JWTSecret:  getEnvValue(envMap, "JWT_SECRET", ""),
 	}
 
-	return cfg
+	if cfg.AppPort == "" {
+		log.Fatal("APP_PORT is required")
+	}
+
+	if cfg.DBName == "" {
+		log.Fatal("DB_NAME is required")
+	}
+
+	if cfg.DBHost == "" {
+		log.Fatal("DB_HOST is required")
+	}
+
+	if cfg.JWTSecret == "" {
+		log.Fatal("JWT_SECRET is required")
+	}
+
+	if len(cfg.JWTSecret) < 32 {
+		log.Fatal("JWT_SECRET must be at least 32 characters long")
+	}
+
+	return cfg, nil
 }
 
 func (c *Config) ServerAddress() string {

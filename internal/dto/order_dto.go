@@ -1,6 +1,9 @@
 package dto
 
-import "go-ecommerce/internal/models"
+import (
+	"go-ecommerce/internal/models"
+	"time"
+)
 
 type OrderItemResponse struct {
 	ID          uint   `json:"id"`
@@ -16,7 +19,7 @@ type OrderResponse struct {
 	UserID     uint                `json:"user_id"`
 	TotalPrice int64               `json:"total_price"`
 	Status     string              `json:"status"`
-	CreatedAt  string              `json:"created_at"`
+	CreatedAt  time.Time           `json:"created_at"`
 	OrderItems []OrderItemResponse `json:"items,omitempty"`
 }
 
@@ -45,7 +48,7 @@ func ToOrderResponse(order *models.Order) OrderResponse {
 			UserID:     order.UserID,
 			TotalPrice: order.TotalPrice,
 			Status:     string(order.Status),
-			CreatedAt:  order.CreatedAt.Format("2006-01-02 15:04:05"),
+			CreatedAt:  order.CreatedAt,
 		}
 	}
 	return OrderResponse{
@@ -53,7 +56,7 @@ func ToOrderResponse(order *models.Order) OrderResponse {
 		UserID:     order.UserID,
 		TotalPrice: order.TotalPrice,
 		Status:     string(order.Status),
-		CreatedAt:  order.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreatedAt:  order.CreatedAt,
 		OrderItems: items,
 	}
 }

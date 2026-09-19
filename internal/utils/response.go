@@ -29,3 +29,17 @@ func ValidationError(c fiber.Ctx, errors map[string]string) error {
 
 	return c.Status(400).JSON(response)
 }
+
+func PaginatedSuccess(c fiber.Ctx, data interface{}, page, limit int, total int64) error {
+	totalPages := int((total + int64(limit) - 1) / int64(limit))
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"data":    data,
+		"meta": fiber.Map{
+			"page":        page,
+			"limit":       limit,
+			"total":       total,
+			"total_pages": totalPages,
+		},
+	})
+}

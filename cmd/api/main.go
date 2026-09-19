@@ -11,16 +11,18 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/logger"
+	fiberRecover "github.com/gofiber/fiber/v3/middleware/recover"
 )
 
 func main() {
 	// 1. Load Config
-	cfg := config.LoadConfig()
-	addr := cfg.ServerAddress()
-
-	if cfg.JWTSecret == "" {
-		log.Fatal("JWT_SECRET is required")
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		log.Fatal("Failed to load config:", err)
 	}
+	addr := cfg.ServerAddress()
 
 	// 2. Connect DB
 	db, err := database.Connect()
@@ -49,7 +51,16 @@ func main() {
 	// 4. Initialize Fiber App
 	app := fiber.New()
 
-	// 5. Setup Routes
+	app.Use(logger.New())
+	app.Use(fiberRecover.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: false,
+		MaxAge:           3600,
+	}))
+
 	router.SetupRoutes(
 		app,
 		userHandler,

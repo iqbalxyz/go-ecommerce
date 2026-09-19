@@ -83,12 +83,7 @@ func (oh *OrderHandler) List(c fiber.Ctx) error {
 		return utils.Error(c, fiber.StatusInternalServerError, "internal server error")
 	}
 
-	return utils.Success(c, fiber.StatusOK, fiber.Map{
-		"data":       res,
-		"total_data": count,
-		"page":       page,
-		"limit":      limit,
-	})
+	return utils.PaginatedSuccess(c, res, page, limit, count)
 }
 
 func (oh *OrderHandler) GetByID(c fiber.Ctx) error {

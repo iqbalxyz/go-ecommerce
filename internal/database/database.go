@@ -15,7 +15,10 @@ var DB *sql.DB
 
 func Connect() (*gorm.DB, error) {
 
-	cfg := config.LoadConfig()
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		return nil, err
+	}
 
 	db, err := gorm.Open(mysql.Open(cfg.DSN()), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),

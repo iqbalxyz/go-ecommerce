@@ -74,14 +74,7 @@ func (ph *ProductHandler) List(c fiber.Ctx) error {
 		return utils.Error(c, fiber.StatusInternalServerError, "internal server error")
 	}
 
-	return utils.Success(c, fiber.StatusOK, fiber.Map{
-		"data": res,
-		"meta": fiber.Map{
-			"page":  page,
-			"limit": limit,
-			"total": count,
-		},
-	})
+	return utils.PaginatedSuccess(c, res, page, limit, count)
 }
 
 func (ph *ProductHandler) GetByID(c fiber.Ctx) error {
