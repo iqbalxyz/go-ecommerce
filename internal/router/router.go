@@ -3,8 +3,10 @@ package router
 import (
 	"go-ecommerce/internal/handler"
 	"go-ecommerce/internal/middleware"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/limiter"
 )
 
 func SetupRoutes(
@@ -17,8 +19,23 @@ func SetupRoutes(
 
 	api := app.Group("/api/v1")
 
+	authLimiter := limiter.New(limiter.Config{
+		Max:        5,
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c fiber.Ctx) string {
+			return c.IP()
+		},
+		LimitReached: func(c fiber.Ctx) error {
+			c.Set("Retry-After", "60")
+			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+				"success": false,
+				"error":   "too many attempts, please try again later",
+			})
+		},
+	})
+
 	// public routes
-	auth := api.Group("/auth")
+	auth := api.Group("/auth", authLimiter)
 	auth.Post("/register", userHandler.Register)
 	auth.Post("/login", userHandler.Login)
 

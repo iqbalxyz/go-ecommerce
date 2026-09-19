@@ -60,7 +60,7 @@ A modular, robust, and high-performance RESTful API for an e-commerce platform b
   - **Clean Layered Architecture**: Clear separation of concerns (Handler &rarr; Service &rarr; Repository).
   - **DTO Pattern**: Separation of internal models from API requests and responses.
   - **Standardized API Response**: Uniform JSON response envelope (`success`, `data`, `meta`, `error`, `errors`).
-  - **Robust Middleware**: Global panic recovery, HTTP request logging, and CORS handling.
+  - **Robust Middleware**: Global panic recovery, HTTP request logging, Rate limiting and CORS handling.
 
 ---
 
