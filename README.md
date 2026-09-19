@@ -13,7 +13,7 @@ A modular, robust, and high-performance RESTful API for an e-commerce platform b
 | Category | Technology | Description |
 | :--- | :--- | :--- |
 | **Language** | [Go](https://go.dev/)  (`v1.27+`) | Fast, statically typed compiled programming language |
-| **Web Framework** | [Fiber v3](https://github.com/gofiber/fiber/v3) (`v3.5.0`) | Express-inspired, high-performance web framework built on Fasthttp |
+| **Web Framework** | [Fiber v3](https://gofiber.io/) (`v3.5.0`) | Express-inspired, high-performance web framework built on Fasthttp |
 | **ORM** | [GORM](https://gorm.io/) (`v1.31.2`) | Feature-rich Object Relational Mapping library for Go |
 | **Database Driver** | [GORM MySQL Driver](https://github.com/go-gorm/mysql) (`v1.6.0`) | MySQL driver for GORM |
 | **Database** | [MySQL 8.0+](https://www.mysql.com/) | Relational database management system |
